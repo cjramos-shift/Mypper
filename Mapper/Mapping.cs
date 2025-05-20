@@ -2,20 +2,21 @@ namespace Mapper;
 
 public class Mapping
 {
-    public void Map<T>(object source)
+    public object Map<T>(object source)
     {
         var typeReturn = typeof(T);
         var returnObj = Activator.CreateInstance(typeReturn);
-        
+
         var type = source.GetType();
         var propertiesSource = type.GetProperties();
-        
+
         foreach (var prop in propertiesSource)
         {
-            var teste = typeReturn.GetProperty(prop.Name).GetValue(source);
-            prop.SetValue(returnObj, "", null);
+            var value = prop.GetValue(source) ?? "Not found";
+            var propInfo = typeReturn.GetProperty(prop.Name);
+            propInfo.SetValue(returnObj, value, null);
         }
-        
-        // return returnObj;
-    } 
+
+        return returnObj;
+    }
 }
